@@ -1,0 +1,75 @@
+## AI Flight Simulator: Development Progress Log
+
+### **Session Summary: Control System Instability & AI Behavior**
+
+This session focused on debugging a persistent control instability affecting both AI and manual flight modes, and refining the AI's flight behavior.
+
+**Identified Issues:**
+
+1.  **Control Instability (Spinning):**
+    - **AI Mode:** The aircraft has a strong tendency to spin out of control when AI is active. This suggests the direct control inputs from the AI are too raw and lack the fine-tuned stabilization that the PID controllers were previously providing. The decision to completely disable PIDs in AI mode may need to be revisited in favor of a hybrid approach.
+    - **Manual Mode:** A less severe, but still noticeable, spinning occurs during manual flight, indicating a potential underlying imbalance in the core flight physics defined in `flightlogic.js`.
+
+2.  **AI Flight Path Interpretation:**
+    - When given the command to fly "around the globe," the AI interprets this literally by spinning the aircraft on its own axis. It is not correctly calculating a circumnavigation route. This points to an issue in the backend AI logic that generates the flight path or the control deltas.
+
+**Next Steps:**
+
+-   Re-evaluate the AI/PID control hierarchy to find a balance that provides AI-driven navigation with PID-based stability.
+-   Investigate the core flight physics to address the root cause of the manual mode instability.
+-   Refine the backend AI to translate high-level commands into proper navigational waypoints and control outputs.
+
+---
+
+### **Session Summary: Camera & Control System Refinements**
+
+This session polished the user experience by fixing persistent camera issues and refining the AI control logic to be more robust and intuitive.
+
+**Key Achievements:**
+
+1.  **Corrected Camera Views:**
+    - **Plane View Fixed:** Rewrote the camera logic with a more robust, mathematically sound implementation to definitively fix the "missing plane" issue. The plane now has a stable and correct tail-view.
+    - **Drone View Tuned:** Refined the drone's camera to provide the requested top-down tail view, improving strategic visibility.
+
+2.  **Drone AI Integration:**
+    - **Full AI Loop:** The drone is now fully integrated into the AI control system. It periodically sends its state to the AI and receives control suggestions, which are reflected in the UI.
+    - **Unified 'C' Key:** The 'Force AI Control' (C) key now works for whichever vehicle is active (plane or drone).
+
+3.  **Logical Control Hierarchy:**
+    - **Direct Application of Suggestions:** Fixed the control flow so that when the AI provides suggestions, they are immediately applied, and the "Current" controls update to match.
+    - **PID Fallback System:** Implemented a fallback mechanism as requested. If the AI provides high-level targets instead of direct control deltas, the vehicle's own PID controllers are used to fly towards those targets. This makes the system more resilient.
+
+**Overall Status:**
+The simulation is now more immersive and logically sound. The camera system is stable and correct for both vehicles. The AI control loop is complete for the drone, and the relationship between AI suggestions and vehicle actions is clear and reliable.
+
+---
+
+### **Previous Session: Core Systems Overhaul & Stability Fixes**
+
+This session focused on a comprehensive audit and refactor of the core simulation systems, resolving critical bugs and unifying the control logic between the user, the AI, and the physics engine.
+
+**Key Achievements:**
+
+1.  **Stable Tail-View Camera:**
+    - Replaced the previous "satellite view" with a robust, intuitive chase-cam.
+    - The new camera provides a smooth, horizontal tail-view that stays parallel to the globe's surface for both the plane and the drone.
+
+2.  **Resolved Control Conflicts & Unified AI Logic:**
+    - **Eliminated Chaotic Behavior:** Removed all conflicting internal PID controllers and hardcoded autopilot logic from the aircraft and main simulation loop.
+    - **Created `applyAIControls`:** Implemented a single, clear function to ensure the active vehicle precisely follows the AI's suggestions (pitch, roll, yaw, and throttle) when in AI mode.
+    - **Fixed Drone Controls:** Corrected the drone's orientation reporting, so its "Current" control values now display accurately in the UI.
+
+3.  **Full-Loop UI & AI Feedback:**
+    - **Synchronized UI:** The "Current" and "AI Suggested" control values in the overlay now update instantly and accurately for both vehicles.
+    - **Live PID & Deltas Panel:** The AI Deltas panel and the PID target sliders now update immediately upon receiving AI feedback, providing a complete visual of the AI's plan.
+
+4.  **Backend API & Physics:**
+    - **Fixed 404 Error:** Added the missing `/api/ai-control` endpoint to the backend server, establishing a stable communication channel for AI control requests.
+    - **Deterministic Stability:** The new endpoint uses reliable, deterministic logic to provide stabilizing control inputs, ensuring the aircraft can maintain a stable orbit.
+    - **Corrected Physics Bug:** Fixed a critical bug where the aircraft's `update` function was called with incorrect parameters, resolving the "drifting" behavior and ensuring speed is calculated correctly.
+
+5.  **User Experience:**
+    - **Instructions Panel:** Implemented a clean, toggleable instructions overlay, accessible via the '?' key.
+
+**Overall Status:**
+The simulator's core logic is now consistent and stable. The camera is intuitive, the control conflicts are resolved, and the UI is fully synchronized with the AI's state. The foundation is now much more robust for future feature development.

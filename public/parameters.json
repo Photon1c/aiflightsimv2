@@ -1,0 +1,25 @@
+{
+  "aircraft": {
+    "label": "GOOG",
+    "color": "#3366cc"
+  },
+  "altimeter": {
+    "unit": "dollars",
+    "baseElevation": 0,
+    "scaleFactor": 100
+  },
+  "controls": {
+    "pitchSpeed": 0.01,
+    "yawSpeed": 0.01,
+    "rollSpeed": 0.02,
+    "throttleIncrement": 0.01,
+    "numTrees": 400,
+    "numClouds": 30
+  },
+  "ai": {
+    "deltaUpdateInterval": 5,
+    "feedbackInterval": 10,
+    "controlInterval": 5,
+    "droneUpdateInterval": 1
+  }
+}
